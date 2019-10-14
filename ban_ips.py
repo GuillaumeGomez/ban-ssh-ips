@@ -7,6 +7,8 @@ with open('/var/log/auth.log', 'r') as f:
     content = f.readlines()
 ips = {}
 for line in content:
+    if "Failed password" not in line:
+        continue
     ip = line.split(' from ')
     if len(ip) < 2:
         continue
