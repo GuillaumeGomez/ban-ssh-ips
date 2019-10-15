@@ -46,7 +46,7 @@ def get_failed_ips():
     v.sort(key=lambda x: x[1], reverse=True)
     print('Done!')
     if len(success_logins) > 0:
-        i = input('Do you want to see the list of successful login IPs? [y/N]').strip().lower()
+        i = input('Do you want to see the list of successful login IPs? [y/N] ').strip().lower()
         if i == 'y':
             for ip in success_logins:
                 print(ip)
@@ -75,8 +75,15 @@ def save_new_banned_users(failed_ips, banned_ips):
         for x in failed_ips:
             if x[0] in banned_ips:
                 continue
-            wrote_ips += 1
+            if x[0].startswith('192.168.'):
+                i = input('{} seems to be a local address... Do you still want to ban it? [y/N] '
+                          .format(x[0]))
+                i = i.strip().lower()
+                if i != 'y':
+                    print('Ignoring it then!')
+                    continue
             f.write('sshd: {}\n'.format(x[0]))
+            wrote_ips += 1
     print('Added {} new IPs to the /etc/hosts.deny file'.format(wrote_ips))
 
 
